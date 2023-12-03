@@ -1,0 +1,92 @@
+import tkinter as tk
+
+def purchase_troop(troop_name, price):
+    print(f"You have purchased {troop_name} for {price} minerals.")
+
+def create_troop_buttons(frame, troops):
+    for troop in troops:
+        troop_name = troop["name"]
+        troop_price = troop["price"]
+
+        btn = tk.Button(frame, text=f"{troop_name}\n{troop_price} Minerals",
+                        command=lambda name=troop_name, price=troop_price: purchase_troop(name, price))
+        btn.pack(pady=10)
+
+def show_original_page():
+    category_frame.pack_forget()
+    current_frame.pack()
+
+def show_category_page(category):
+    global category_frame
+    current_frame.pack_forget()
+    category_frame = tk.Frame(root, bg="black")
+    category_frame.pack(fill=tk.BOTH, expand=True)
+
+    # Add a "Back" button in the top right corner
+    back_button = tk.Button(category_frame, text="Back", command=show_original_page)
+    back_button.pack(side=tk.TOP, anchor=tk.NE, padx=10, pady=10)
+
+    # Filter troops based on the selected category
+    category_troops = [troop for troop in units_and_buildings if category in troop["category"]]
+    
+    create_troop_buttons(category_frame, category_troops)
+
+# Create the main window
+root = tk.Tk()
+root.title("Starcraft 2 Terran Promotion")
+root.configure(bg="black")
+
+# Units and Buildings information
+units_and_buildings = [
+    {"name": "Marine", "price": 50, "category": "Infantry"},
+    {"name": "Medic", "price": 75, "category": "Infantry"},
+    {"name": "Firebat", "price": 80, "category": "Infantry"},
+    {"name": "Ghost", "price": 250, "category": "Infantry"},
+    {"name": "Marauder", "price": 100, "category": "Infantry"},
+    {"name": "Reaper", "price": 75, "category": "Infantry"},
+    {"name": "Siege Tank", "price": 150, "category": "Mech"},
+    {"name": "Hellion", "price": 80, "category": "Mech"},
+    {"name": "Widow Mine", "price": 120, "category": "Mech"},
+    {"name": "Thor", "price": 300, "category": "Mech"},
+    {"name": "Warhound", "price": 200, "category": "Mech"},
+    {"name": "Medivac", "price": 200, "category": "Fleet"},
+    {"name": "Battlecruiser", "price": 300, "category": "Fleet"},
+    {"name": "Raven", "price": 200, "category": "Fleet"},
+    {"name": "Viking", "price": 150, "category": "Fleet"},
+    {"name": "Wraith", "price": 150, "category": "Fleet"},
+    {"name": "Banshee", "price": 150, "category": "Fleet"},
+    {"name": "Command Center", "price": 400, "category": "Structures"},
+    {"name": "Supply Depot", "price": 100, "category": "Structures"},
+    {"name": "Refinery", "price": 75, "category": "Structures"},
+    {"name": "Barracks", "price": 150, "category": "Structures"},
+    {"name": "Engineering Bay", "price": 125, "category": "Structures"},
+    {"name": "Missle Turret", "price": 100, "category": "Structures"},
+    {"name": "Bunker", "price": 100, "category": "Structures"},
+    {"name": "Sensor Tower", "price": 125, "category": "Structures"},
+    {"name": "Factory", "price": 150, "category": "Structures"},
+    {"name": "Armory", "price": 150, "category": "Structures"},
+    {"name": "Starport", "price": 150, "category": "Structures"},
+    {"name": "Fusion Core", "price": 150, "category": "Structures"},
+]
+
+shopping_cart = []
+
+# Create and display buttons for categories on the main window
+current_frame = tk.Frame(root, bg="black")
+current_frame.pack(fill=tk.BOTH, expand=True)
+
+# Create buttons for categories
+for category in set(troop["category"] for troop in units_and_buildings):
+    btn_category = tk.Button(current_frame, text=f"{category}",
+                            command=lambda category=category: show_category_page(category))
+    btn_category.pack(pady=10)
+
+# Create the initial troop buttons
+create_troop_buttons(current_frame, units_and_buildings)
+
+# Create a shopping cart button
+cart_button = tk.Button(root, text="Shopping Cart", command=shopping_cart)
+cart_button.pack(side=tk.TOP, anchor=tk.NW, padx=10, pady=10)
+
+# Run the Tkinter event loop
+root.mainloop()
